@@ -95,7 +95,7 @@ class _ProfileCardState extends State<ProfileCard> {
         'assets/Perro_3.jpg',
         'assets/Perro_4.jpg',
       ],
-      visiblePhotoIndex: 1,
+      visiblePhotoIndex: 0,
     );
   }
 
