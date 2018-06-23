@@ -1,0 +1,47 @@
+name: guauapp
+description: ¡Guau! Amor de perros.
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_sign_in: "^3.0.4"
+  firebase_auth: "^0.5.11"
+  color: "^2.0.2"
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^0.1.2
+
+  fluttery: "^0.0.7"
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+
+# For information on the generic Dart part of this file, see the
+# following page: https://www.dartlang.org/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+
+
+  uses-material-design: true
+
+  assets:
+   - assets/Perro_1.jpg
+   - assets/Perro_2.jpg
+   - assets/Perro_3.jpg
+   - assets/Perro_4.jpg
+   - assets/photo_1.jpg
+   - assets/Logo_1.png
+   - assets/Logo_sin_imagen.png
+
+
+  fonts:
+  - family: Lobster
+    fonts:
+      - asset: fonts/Lobster-Regular.ttf
+        style: italic
+
