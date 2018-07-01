@@ -9,13 +9,70 @@ class DraggableCard extends StatefulWidget {
   _DraggableCardState createState() => _DraggableCardState();
 }
 
-class _DraggableCardState extends State<DraggableCard> {
+class _DraggableCardState extends State<DraggableCard>
+    with TickerProviderStateMixin {
   Offset cardOffset = const Offset(0.0, 0.0);
   Offset dragStart;
   Offset dragPosition;
+  Offset slideBackStart;
+  AnimationController slideBackAnimation;
+  Tween<Offset> slideOutTween;
+  AnimationController slideOutAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    slideBackAnimation = new AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    )
+      ..addListener(() => setState(() {
+            cardOffset = Offset.lerp(slideBackStart, const Offset(0.0, 0.0),
+                Curves.elasticOut.transform(slideBackAnimation.value));
+          }))
+      ..addStatusListener((AnimationStatus status) {
+        if (status == AnimationStatus.completed) {
+          setState(() {
+            dragStart = null;
+            slideBackStart = null;
+            dragPosition = null;
+          });
+        }
+      });
+
+    slideOutAnimation = new AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    )
+      ..addListener(() {
+        setState(() {
+          cardOffset = slideOutTween.evaluate(slideOutAnimation);
+        });
+      })
+      ..addStatusListener((AnimationStatus status) {
+        if (status == AnimationStatus.completed) {
+          setState(() {
+            dragStart = null;
+            dragPosition = null;
+            slideOutTween = null;
+            cardOffset = const Offset(0.0, 0.0);
+          });
+        }
+      });
+  }
+
+  @override
+  void dispose() {
+    slideBackAnimation.dispose();
+    super.dispose();
+  }
 
   void _onPanStart(DragStartDetails details) {
     dragStart = details.globalPosition;
+
+    if (slideBackAnimation.isAnimating) {
+      slideBackAnimation.stop(canceled: true);
+    }
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
@@ -26,11 +83,8 @@ class _DraggableCardState extends State<DraggableCard> {
   }
 
   void _onPanEnd(DragEndDetails details) {
-    setState(() {
-      dragStart = null;
-      dragPosition = null;
-      cardOffset = const Offset(0.0, 0.0);
-    });
+    slideBackStart = cardOffset;
+    slideBackAnimation.forward(from: 0.0);
   }
 
   double _rotation(Rect dragBounds) {
